@@ -5,11 +5,17 @@ namespace App\Services;
 use App\DTOs\CarDTO;
 use App\Models\Car;
 use Carbon\Carbon;
-use Ramsey\Collection\Collection;
 
 class CarService
 {
-    public function getAvailableCars(CarDTO $dto)
+    /**
+     * Возвращает список автомобилей, доступных для конкретного пользователя
+     * в заданный временной диапазон.
+     *
+     * @param CarDTO $dto DTO с параметрами запроса.
+     * @return \Illuminate\Database\Eloquent\Collection Коллекция автомобилей или JSON-ответ с ошибкой.
+     */
+    public function getAvailableCars(CarDTO $dto): \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\JsonResponse
     {
         $user = \App\Models\User::where('email', $dto->email)->first();
         if (!$user) {

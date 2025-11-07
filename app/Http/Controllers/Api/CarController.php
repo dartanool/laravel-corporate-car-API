@@ -15,11 +15,22 @@ use Illuminate\Support\Facades\Log;
 
 class CarController extends Controller
 {
-
+    /**
+     * Конструктор контроллера.
+     *
+     * @param CarService $carService Сервис для работы с автомобилями.
+     */
     public function __construct(public CarService $carService)
-    {}
+    {
+    }
 
-    public function available(AvailableCarsRequest $request)
+    /**
+     * Возвращает список доступных автомобилей для указанного пользователя.
+     *
+     * @param AvailableCarsRequest $request Валидационный запрос с параметрами фильтрации.
+     * @return AnonymousResourceCollection|JsonResponse JSON-ответ со списком машин или сообщением об ошибке.
+     */
+    public function available(AvailableCarsRequest $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $dto = CarDto::fromArray($request->validated());
         $cars = $this->carService->getAvailableCars($dto);

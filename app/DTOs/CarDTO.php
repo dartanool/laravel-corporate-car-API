@@ -7,6 +7,14 @@ use App\Models\Car;
 
 class CarDTO
 {
+    /**
+     * @param string $email Email пользователя.
+     * @param string $startTime Дата и время начала поездки.
+     * @param string $endTime Дата и время окончания поездки.
+     * @param int|null $modelId Идентификатор модели автомобиля.
+     * @param int|null $categoryId Идентификатор категории комфорта.
+     * @param int|null $userId Идентификатор пользователя.
+     */
     public function __construct(
         public string $email,
         public string $startTime,
@@ -18,6 +26,12 @@ class CarDTO
     {
     }
 
+    /**
+     * Создаёт DTO из массива данных.
+     *
+     * @param array $data Входные данные (из валидации).
+     * @return self
+     */
     public static function fromArray(array $data): self
     {
         return new self(

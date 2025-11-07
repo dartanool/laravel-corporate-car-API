@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class AvailableCarsRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Разрешает выполнение запроса.
      */
     public function authorize(): bool
     {
@@ -15,9 +15,9 @@ class AvailableCarsRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Правила валидации запроса.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
     public function rules(): array
     {
@@ -31,6 +31,9 @@ class AvailableCarsRequest extends FormRequest
         ];
     }
 
+    /**
+     * Сообщения об ошибках валидации.
+     */
     public function messages(): array
     {
         return [

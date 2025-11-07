@@ -8,15 +8,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class CarResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
+     * Преобразует модель Car в массив для JSON-ответа.
      *
-     * @return array<string, mixed>
+     * @param Request $request
+     * @return array
      */
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'reg_number' => $this->reg_number ,
+            'reg_number' => $this->reg_number,
 
             'model' => [
                 'id' => $this->carModel->id,
