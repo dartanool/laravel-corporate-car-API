@@ -16,7 +16,7 @@ REST API для выбора и бронирования служебных ав
 ---
 
 ##  Установка
-    ```bash
+
     # Клонирование репозитория
     git clone <repository-url>
     cd test
@@ -51,7 +51,6 @@ REST API для выбора и бронирования служебных ав
 
 ## Настройка базы данных
 
-    ```bash
     DB_CONNECTION=pgsql
     DB_HOST=postgres_db
     DB_PORT=5432
@@ -62,11 +61,10 @@ REST API для выбора и бронирования служебных ав
 ---
 
 ## Пример запросов
-    ```bash
+
     GET /api/available-cars?email=manager@test.com&start_time=2025-11-08T10:00:00&end_time=2025-11-08T13:00:00
 
 ## Пример ответа 
-    ```bash
     {
         "data": [
         {
