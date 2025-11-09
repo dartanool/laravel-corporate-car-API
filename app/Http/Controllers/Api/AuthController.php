@@ -15,7 +15,8 @@ class AuthController extends Controller
     /**
      * Регистрация пользователя
      *
-     * @param RegisterRequest $request Валидационный запрос.
+     * @param RegisterRequest $request
+     * * @return \Illuminate\Http\JsonResponse
      */
     public function register(RegisterRequest $request): \Illuminate\Http\JsonResponse
     {
@@ -34,10 +35,11 @@ class AuthController extends Controller
     }
 
     /**
-     * Авторизация пользователя
+     * Авторизация пользователя.
      *
-     * @param RegisterRequest $request Валидационный запрос.
-     *
+     * @param LoginRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
