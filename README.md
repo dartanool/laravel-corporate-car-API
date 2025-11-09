@@ -11,13 +11,7 @@ REST API для выбора и бронирования служебных ав
 
 ## Стек технологий
 
-PHP 8.3+, Laravel 12, PostgreSQL, Eloquent ORM, JSON API (REST), DTO + Service + Resource architecture
-
----
-
-## Авторизация
-
-Используем Laravel Sanctum.
+PHP 8.3+, Laravel 12, Laravel Sanctum, PostgreSQL, Eloquent ORM, JSON API (REST), DTO + Service + Resource architecture
 
 ---
 
@@ -84,6 +78,7 @@ POST /api/register
     }
 
 ## Логин
+
 POST /api/login
     Content-Type: application/json
     {
@@ -101,6 +96,7 @@ Query-параметры:
     filter[end_time]=YYYY-MM-DD HH:MM:SS
     filter[model_id]=OPTIONAL
     filter[category_id]=OPTIONAL
+
 ---
 
 ## Пример запросов
@@ -149,4 +145,28 @@ Query-параметры:
 - Service — бизнес-логика фильтрации
 - Resource — форматирование ответа API
 - FormRequest — валидация данных
+- Filters - фильтрация данных
 - Controller — обработка входных запросов
+
+--- 
+ 
+## Структура проекта 
+
+    app/
+    ├── DTOs/
+    │    └── CarDTO.php        
+    ├── Filters/
+    │    └── CarFilters.php      
+    ├── Requests/
+    │    └── AvailableCarsRequest.php   
+    │    └── LoginRequest.php   
+    │    └── RegisterRequest.php   
+    ├── Resources/
+    │    └── CarResources.php   
+    ├── Services/
+    │    └── CarService.php      
+    ├── Http/
+    │    └── Controllers/
+    │       └── Api/
+    │           └── CarController.php
+    │           └── AuthController.php

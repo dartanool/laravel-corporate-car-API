@@ -25,7 +25,7 @@ class CarDTO
      * @param array $data Входные данные (из валидации).
      * @return self
      */
-    public static function fromRequest(array $data): self
+    public static function fromArray(array $data): self
     {
         $filters = $data['filter'] ?? [];
 

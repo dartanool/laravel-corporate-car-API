@@ -23,17 +23,14 @@ class CarController extends Controller
      * Возвращает список доступных автомобилей для указанного пользователя.
      *
      * @param AvailableCarsRequest $request Валидационный запрос с параметрами фильтрации.
-     * @return \Illuminate\Http\JsonResponse JSON-ответ со списком машин или сообщением об ошибке.
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection JSON-ответ со списком машин или сообщением об ошибке.
      */
-    public function available(AvailableCarsRequest $request): \Illuminate\Http\JsonResponse
+    public function available(AvailableCarsRequest $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $dto = CarDTO::fromRequest($request->validated());
+        $dto = CarDTO::fromArray($request->validated());
+        $cars = $this->carService->getAvailableCars($dto);
 
-        $cars = app(\App\Services\CarService::class)->getAvailableCars($dto);
-
-        return response()->json([
-            'data' => \App\Http\Resources\CarResource::collection($cars),
-            'count' => $cars->count(),
-        ]);
+        return CarResource::collection($cars)
+            ->additional(['count' => $cars->count()]);
     }
 }
