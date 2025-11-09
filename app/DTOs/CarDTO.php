@@ -5,7 +5,6 @@ namespace App\DTOs;
 class CarDTO
 {
     /**
-     * @param string $email Email пользователя.
      * @param string $startTime Дата и время начала поездки.
      * @param string $endTime Дата и время окончания поездки.
      * @param int|null $modelId Идентификатор модели автомобиля.
@@ -13,7 +12,6 @@ class CarDTO
      * @param int|null $userId Идентификатор пользователя.
      */
     public function __construct(
-        public string $email,
         public string $startTime,
         public string $endTime,
         public ?int   $modelId = null,
@@ -32,7 +30,6 @@ class CarDTO
     public static function fromArray(array $data): self
     {
         return new self(
-            email: $data['email'],
             startTime: $data['start_time'],
             endTime: $data['end_time'],
             modelId: $data['model_id'] ?? null,

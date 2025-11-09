@@ -17,7 +17,7 @@ class CarService
      */
     public function getAvailableCars(CarDTO $dto): \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\JsonResponse
     {
-        $user = \App\Models\User::where('email', $dto->email)->first();
+        $user = auth()->user();
         if (!$user) {
             return response()->json(['message' => 'Пользователь с таким email не найден'], 404);
         }

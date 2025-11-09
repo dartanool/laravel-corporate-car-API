@@ -22,7 +22,6 @@ class AvailableCarsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
             'model_id' => 'nullable|integer|exists:car_models,id',

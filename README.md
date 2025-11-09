@@ -23,7 +23,6 @@ REST API для выбора и бронирования служебных ав
     
     # Установка зависимостей
     composer install
-    npm install
     
     # Настройка окружения
     cp .env.example .env
@@ -40,8 +39,16 @@ REST API для выбора и бронирования служебных ав
 
 ## Эндпоинты 
 
-    GET /api/available-cars
+    POST /api/register
+- name (string) - Email пользователя
 - email (string) - Email пользователя
+- password (string) - Email пользователя
+
+    POST /api/login
+- email (string) - Email пользователя
+- password (string) - Email пользователя
+
+    GET /api/available-cars
 - start_time (string) - Начало поездки
 - end_time (string) - Конец поездки
 - model_id (integer) - ID модели автомобиля
@@ -62,7 +69,14 @@ REST API для выбора и бронирования служебных ав
 
 ## Пример запросов
 
-    GET /api/available-cars?email=manager@test.com&start_time=2025-11-08T10:00:00&end_time=2025-11-08T13:00:00
+    curl -X GET "http://127.0.0.1:8000/api/available-cars" \
+    -H "Accept: application/json" \
+    -H "Authorization: Bearer 1|roW2W3t9KofuTcX8tcQHmhlFoqb0lypsgVsGemRd5305e3a0" \
+    -G \
+    --data-urlencode "start_time=2025-11-09 10:00:00" \
+    --data-urlencode "end_time=2025-11-09 14:00:00"
+
+---
 
 ## Пример ответа 
     {
