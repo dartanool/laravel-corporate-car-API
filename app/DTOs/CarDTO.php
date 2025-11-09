@@ -2,9 +2,6 @@
 
 namespace App\DTOs;
 
-use App\Http\Requests\AvailableCarsRequest;
-use App\Models\Car;
-
 class CarDTO
 {
     /**
