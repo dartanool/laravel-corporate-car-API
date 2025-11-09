@@ -11,7 +11,13 @@ REST API для выбора и бронирования служебных ав
 
 ## Стек технологий
 
-  PHP 8.3+, Laravel 12, PostgreSQL, Eloquent ORM, JSON API (REST), DTO + Service + Resource architecture
+PHP 8.3+, Laravel 12, PostgreSQL, Eloquent ORM, JSON API (REST), DTO + Service + Resource architecture
+
+---
+
+## Авторизация
+
+Используем Laravel Sanctum.
 
 ---
 
@@ -37,6 +43,17 @@ REST API для выбора и бронирования служебных ав
 
 ---
 
+## Настройка базы данных
+
+    DB_CONNECTION=pgsql
+    DB_HOST=postgres_db
+    DB_PORT=5432
+    DB_DATABASE=laravel
+    DB_USERNAME=root
+    DB_PASSWORD=
+
+---
+
 ## Эндпоинты 
 
     POST /api/register
@@ -56,25 +73,46 @@ REST API для выбора и бронирования служебных ав
 
 ---
 
-## Настройка базы данных
+## Регистрация
 
-    DB_CONNECTION=pgsql
-    DB_HOST=postgres_db
-    DB_PORT=5432
-    DB_DATABASE=laravel
-    DB_USERNAME=root
-    DB_PASSWORD=
+POST /api/register
+    Content-Type: application/json
+    {
+    "name": "Имя",
+    "email": "user@example.com",
+    "password": "password123"
+    }
 
+## Логин
+POST /api/login
+    Content-Type: application/json
+    {
+    "email": "user@example.com",
+    "password": "password123"
+    }
+
+## Получение данных 
+
+Headers:
+    Accept: application/json
+    Authorization: Bearer TOKEN_STRING
+Query-параметры:
+    filter[start_time]=YYYY-MM-DD HH:MM:SS
+    filter[end_time]=YYYY-MM-DD HH:MM:SS
+    filter[model_id]=OPTIONAL
+    filter[category_id]=OPTIONAL
 ---
 
 ## Пример запросов
 
     curl -X GET "http://127.0.0.1:8000/api/available-cars" \
     -H "Accept: application/json" \
-    -H "Authorization: Bearer 1|roW2W3t9KofuTcX8tcQHmhlFoqb0lypsgVsGemRd5305e3a0" \
+    -H "Authorization: Bearer <TOKEN_STRING>" \
     -G \
-    --data-urlencode "start_time=2025-11-09 10:00:00" \
-    --data-urlencode "end_time=2025-11-09 14:00:00"
+    --data-urlencode "filter[start_time]=2025-11-09 10:00:00" \
+    --data-urlencode "filter[end_time]=2025-11-09 14:00:00" \
+    --data-urlencode "filter[model_id]=1" \
+    --data-urlencode "filter[category_id]=2"
 
 ---
 

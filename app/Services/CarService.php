@@ -9,11 +9,11 @@ use Carbon\Carbon;
 class CarService
 {
     /**
-     * Возвращает список автомобилей, доступных для конкретного пользователя
-     * в заданный временной диапазон.
+     * Возвращает список автомобилей, доступных авторизованному пользователю.
      *
      * @param CarDTO $dto DTO с параметрами запроса.
-     * @return \Illuminate\Database\Eloquent\Collection Коллекция автомобилей или JSON-ответ с ошибкой.
+     * @return \Illuminate\Database\Eloquent\Collection Коллекция автомобилей
+     * или \Illuminate\Http\JsonResponse при ошибке.
      */
     public function getAvailableCars(CarDTO $dto): \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\JsonResponse
     {
@@ -40,7 +40,7 @@ class CarService
         }
 
         if (!empty($dto->categoryId)) {
-            $query->whereHas('model', function ($q) use ($dto) {
+            $query->whereHas('carModel', function ($q) use ($dto) {
                 $q->where('comfort_category_id', $dto->categoryId);
             });
         }

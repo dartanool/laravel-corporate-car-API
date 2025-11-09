@@ -22,11 +22,10 @@ class AvailableCarsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_time' => 'required|date',
-            'end_time' => 'required|date|after:start_time',
-            'model_id' => 'nullable|integer|exists:car_models,id',
-            'category_id' => 'nullable|integer|exists:comfort_categories,id',
-            'user_id' => 'nullable|integer|exists:users,id',
+            'filter.start_time' => 'required|date',
+            'filter.end_time' => 'required|date|after:filter.start_time',
+            'filter.model_id' => 'nullable|integer|exists:car_models,id',
+            'filter.category_id' => 'nullable|integer|exists:comfort_categories,id',
         ];
     }
 
@@ -36,9 +35,9 @@ class AvailableCarsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'start_time.required' => 'Нужно указать дату начала поездки',
-            'end_time.required' => 'Нужно указать дату окончания поездки',
-            'end_time.after' => 'Дата окончания должна быть позже начала',
+            'filter.start_time.required' => 'Нужно указать дату начала поездки',
+            'filter.end_time.required' => 'Нужно указать дату окончания поездки',
+            'filter.end_time.after' => 'Дата окончания должна быть позже начала',
         ];
     }
 }
