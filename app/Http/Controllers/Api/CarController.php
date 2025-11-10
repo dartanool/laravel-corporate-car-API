@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AvailableCarsRequest;
 use App\Http\Resources\CarResource;
 use App\Services\CarService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CarController extends Controller
 {
@@ -23,14 +24,21 @@ class CarController extends Controller
      * Возвращает список доступных автомобилей для указанного пользователя.
      *
      * @param AvailableCarsRequest $request Валидационный запрос с параметрами фильтрации.
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection JSON-ответ со списком машин или сообщением об ошибке.
+     * @return \Illuminate\Http\JsonResponse JSON-ответ со списком машин или сообщением об ошибке.
      */
-    public function available(AvailableCarsRequest $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function available(AvailableCarsRequest $request): \Illuminate\Http\JsonResponse
     {
         $dto = CarDTO::fromArray($request->validated());
-        $cars = $this->carService->getAvailableCars($dto);
 
-        return CarResource::collection($cars)
-            ->additional(['count' => $cars->count()]);
+        try {
+            $cars = $this->carService->getAvailableCars($dto);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
+
+        return response()->json([
+            'data' => CarResource::collection($cars),
+            'count' => $cars->count(),
+        ]);
     }
 }
