@@ -6,24 +6,30 @@ use App\DTOs\CarDTO;
 use App\Filters\CarFilters;
 use App\Models\Car;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 
 class CarService
 {
     /**
      * Возвращает список автомобилей, доступных авторизованному пользователю.
      *
-     * @param CarDTO $dto DTO с параметрами фильтрации.
-     * @param User $user Текущий авторизованный пользователь.
-     * @return Collection<\App\Models\Car>
-     *
-     * @throws ModelNotFoundException Если у пользователя не указана должность.
+     * @param CarDTO $dto DTO с параметрами запроса.
+     * @return \Illuminate\Database\Eloquent\Collection Коллекция автомобилей
+     * или \Illuminate\Http\JsonResponse при ошибке.
      */
-    public function getAvailableCars(CarDTO $dto): \Illuminate\Database\Eloquent\Collection|\Illuminate\Http\JsonResponse
+    public function __construct(private CarFilters $filters)
     {
-        $user = auth()->user();
-        if (!$user->position) {
-            throw new ModelNotFoundException('У пользователя не указана должность (position).');
+    }
+
+    /**
+     * Возвращает список автомобилей, доступных пользователю.
+     */
+    public function getAvailableCars(CarDTO $dto)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->position) {
+            throw new \Exception('У пользователя не указана должность.');
         }
 
         $start = Carbon::parse($dto->startTime);
@@ -35,19 +41,10 @@ class CarService
             ->toArray();
 
         $query = Car::query()
-            ->whereHas('carModel', function ($q) use ($allowedCategories) {
-                $q->whereIn('comfort_category_id', $allowedCategories);
-            });
+            ->whereHas('carModel', fn($q) => $q->whereIn('comfort_category_id', $allowedCategories)
+            );
 
-        if ($dto->modelId) {
-            $query->where('car_model_id', $dto->modelId);
-        }
-
-        if ($dto->categoryId) {
-            $query->whereHas('carModel', function ($q) use ($dto) {
-                $q->where('comfort_category_id', $dto->categoryId);
-            });
-        }
+        $this->filters->apply($query);
 
         $query->whereDoesntHave('bookings', function ($q) use ($start, $end) {
             $q->where(function ($q2) use ($start, $end) {

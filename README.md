@@ -107,8 +107,7 @@ Query-параметры:
     -G \
     --data-urlencode "filter[start_time]=2025-11-09 10:00:00" \
     --data-urlencode "filter[end_time]=2025-11-09 14:00:00" \
-    --data-urlencode "filter[model_id]=1" \
-    --data-urlencode "filter[category_id]=2"
+    --data-urlencode "filter[model_id]=1"
 
 ---
 
