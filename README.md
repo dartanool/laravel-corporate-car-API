@@ -70,32 +70,34 @@ PHP 8.3+, Laravel 12, Laravel Sanctum, PostgreSQL, Eloquent ORM, Spatie QueryBui
 ## Регистрация
 
 POST /api/register
-Content-Type: application/json
-{
-"name": "Имя",
-"email": "user@example.com",
-"password": "password123"
-}
+   
+    Content-Type: application/json
+    {
+    "name": "Имя",
+    "email": "user@example.com",
+    "password": "password123"
+    }
 
 ## Логин
 
 POST /api/login
-Content-Type: application/json
-{
-"email": "user@example.com",
-"password": "password123"
-}
+
+    Content-Type: application/json
+    {
+    "email": "user@example.com",
+    "password": "password123"
+    }
 
 ## Получение данных
 
-Headers:
-Accept: application/json
-Authorization: Bearer TOKEN_STRING
-Query-параметры:
-filter[start_time]=YYYY-MM-DD HH:MM:SS
-filter[end_time]=YYYY-MM-DD HH:MM:SS
-filter[carModel.comfort_category_id]=OPTIONAL
-filter[car_model_id]=OPTIONAL
+    Headers:
+        Accept: application/json
+        Authorization: Bearer TOKEN_STRING
+    Query-параметры:
+        filter[start_time]=YYYY-MM-DD HH:MM:SS
+        filter[end_time]=YYYY-MM-DD HH:MM:SS
+        filter[carModel.comfort_category_id]=OPTIONAL
+        filter[car_model_id]=OPTIONAL
 
 ---
 
@@ -134,7 +136,6 @@ filter[car_model_id]=OPTIONAL
             }   
         ]
     }
-
 
 ---
 
