@@ -11,7 +11,7 @@ REST API для выбора и бронирования служебных ав
 
 ## Стек технологий
 
-PHP 8.3+, Laravel 12, Laravel Sanctum, PostgreSQL, Eloquent ORM, JSON API (REST), DTO + Service + Resource architecture
+PHP 8.3+, Laravel 12, Laravel Sanctum, PostgreSQL, Eloquent ORM, Spatie QueryBuilder, JSON API (REST), DTO + Service + Resource architecture
 
 ---
 
@@ -48,18 +48,18 @@ PHP 8.3+, Laravel 12, Laravel Sanctum, PostgreSQL, Eloquent ORM, JSON API (REST)
 
 ---
 
-## Эндпоинты 
+## Эндпоинты
 
     POST /api/register
 - name (string) - Email пользователя
 - email (string) - Email пользователя
 - password (string) - Email пользователя
 
-    POST /api/login
+  POST /api/login
 - email (string) - Email пользователя
 - password (string) - Email пользователя
 
-    GET /api/available-cars
+  GET /api/available-cars
 - start_time (string) - Начало поездки
 - end_time (string) - Конец поездки
 - model_id (integer) - ID модели автомобиля
@@ -70,75 +70,75 @@ PHP 8.3+, Laravel 12, Laravel Sanctum, PostgreSQL, Eloquent ORM, JSON API (REST)
 ## Регистрация
 
 POST /api/register
-    Content-Type: application/json
-    {
-    "name": "Имя",
-    "email": "user@example.com",
-    "password": "password123"
-    }
+Content-Type: application/json
+{
+"name": "Имя",
+"email": "user@example.com",
+"password": "password123"
+}
 
 ## Логин
 
 POST /api/login
-    Content-Type: application/json
-    {
-    "email": "user@example.com",
-    "password": "password123"
-    }
+Content-Type: application/json
+{
+"email": "user@example.com",
+"password": "password123"
+}
 
-## Получение данных 
+## Получение данных
 
 Headers:
-    Accept: application/json
-    Authorization: Bearer TOKEN_STRING
+Accept: application/json
+Authorization: Bearer TOKEN_STRING
 Query-параметры:
-    filter[start_time]=YYYY-MM-DD HH:MM:SS
-    filter[end_time]=YYYY-MM-DD HH:MM:SS
-    filter[model_id]=OPTIONAL
-    filter[category_id]=OPTIONAL
+filter[start_time]=YYYY-MM-DD HH:MM:SS
+filter[end_time]=YYYY-MM-DD HH:MM:SS
+filter[carModel.comfort_category_id]=OPTIONAL
+filter[car_model_id]=OPTIONAL
 
 ---
 
 ## Пример запросов
 
-    curl -X GET "http://127.0.0.1:8000/api/available-cars" \
+    curl -G "http://127.0.0.1:8000/api/available-cars" \
     -H "Accept: application/json" \
-    -H "Authorization: Bearer <TOKEN_STRING>" \
-    -G \
+    -H "Authorization: Bearer 1|exampletoken123" \
+    --data-urlencode "filter[car_model_id]=1" \
+    --data-urlencode "filter[carModel.comfort_category_id]=1" \
     --data-urlencode "filter[start_time]=2025-11-09 10:00:00" \
-    --data-urlencode "filter[end_time]=2025-11-09 14:00:00" \
-    --data-urlencode "filter[model_id]=1"
+    --data-urlencode "filter[end_time]=2025-11-09 14:00:00"
 
 ---
 
-## Пример ответа 
+## Пример ответа
     {
         "data": [
-        {
-            "id": 2,
-            "reg_number": "B222BB",
-            "model": {
-                "id": 2,
-                "name": "Skoda Octavia",
-                "comfort_category": {
-                    "id": 2,
-                    "name": "Вторая"
+            {
+                "id": 1,
+                "reg_number": "A111AA",
+                "model": {
+                    "id": 1,
+                    "name": "Toyota Camry",
+                    "comfort_category": {
+                        "id": 1,
+                        "name": "Первая"
+                    }
+                },
+                "driver": {
+                    "id": 1,
+                    "first_name": "Иван",
+                    "last_name": "Иванов",
+                    "employee_number": "DRV001"
                 }
-            },
-            "driver": {
-                "id": 2,
-                "first_name": "Пётр",
-                "last_name": "Петров",
-                "employee_number": "DRV002"
-            }
-        },
-       ],
-       "count": 1
+            }   
+        ]
     }
+
 
 ---
 
-## Архитектура проекта 
+## Архитектура проекта
 
 - DTO — передача данных между слоями
 - Service — бизнес-логика фильтрации
@@ -148,14 +148,12 @@ Query-параметры:
 - Controller — обработка входных запросов
 
 --- 
- 
-## Структура проекта 
+
+## Структура проекта
 
     app/
     ├── DTOs/
-    │    └── CarDTO.php        
-    ├── Filters/
-    │    └── CarFilters.php      
+    │    └── CarDTO.php            
     ├── Requests/
     │    └── AvailableCarsRequest.php   
     │    └── LoginRequest.php   

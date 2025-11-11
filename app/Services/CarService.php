@@ -2,61 +2,63 @@
 
 namespace App\Services;
 
-use App\DTOs\CarDTO;
-use App\Filters\CarFilters;
 use App\Models\Car;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class CarService
 {
     /**
-     * Возвращает список автомобилей, доступных авторизованному пользователю.
+     * Возвращает список автомобилей, доступных пользователю по фильтрам.
      *
-     * @param CarDTO $dto DTO с параметрами запроса.
-     * @return \Illuminate\Database\Eloquent\Collection Коллекция автомобилей
-     * или \Illuminate\Http\JsonResponse при ошибке.
+     * Поддерживаемые фильтры:
+     *  - filter[start_time] — время начала бронирования
+     *  - filter[end_time] — время окончания бронирования
+     *  - filter[car_model_id] — ID модели автомобиля
+     *  - filter[carModel.comfort_category_id] — ID категории комфорта
+     *
+     * @param array $filters Параметры фильтрации.
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function __construct(private CarFilters $filters)
+    public function getAvailableCars(array $filters)
     {
-    }
+        $start = isset($filters['start_time']) ? Carbon::parse($filters['start_time']) : null;
+        $end = isset($filters['end_time']) ? Carbon::parse($filters['end_time']) : null;
 
-    /**
-     * Возвращает список автомобилей, доступных пользователю.
-     */
-    public function getAvailableCars(CarDTO $dto)
-    {
-        $user = Auth::user();
-
-        if (!$user || !$user->position) {
-            throw new \Exception('У пользователя не указана должность.');
-        }
-
-        $start = Carbon::parse($dto->startTime);
-        $end = Carbon::parse($dto->endTime);
-
-        $allowedCategories = $user->position
-            ->comfortCategories()
-            ->pluck('comfort_categories.id')
-            ->toArray();
-
-        $query = Car::query()
-            ->whereHas('carModel', fn($q) => $q->whereIn('comfort_category_id', $allowedCategories)
-            );
-
-        $this->filters->apply($query);
-
-        $query->whereDoesntHave('bookings', function ($q) use ($start, $end) {
-            $q->where(function ($q2) use ($start, $end) {
-                $q2->whereBetween('starts_at', [$start, $end])
-                    ->orWhereBetween('ends_at', [$start, $end])
-                    ->orWhere(function ($q3) use ($start, $end) {
-                        $q3->where('starts_at', '<', $start)
-                            ->where('ends_at', '>', $end);
-                    });
-            });
-        });
-
-        return $query->with(['carModel.comfortCategory', 'driver'])->get();
+        return QueryBuilder::for(Car::class)
+            ->with(['carModel.comfortCategory', 'driver'])
+            ->allowedFilters([
+                AllowedFilter::exact('car_model_id'),
+                AllowedFilter::exact('carModel.comfort_category_id'),
+                AllowedFilter::callback('start_time', function ($query, $value) use ($end) {
+                    $start = Carbon::parse($value);
+                    if ($end) {
+                        $query->whereDoesntHave('bookings', function ($q) use ($start, $end) {
+                            $q->where(function ($q2) use ($start, $end) {
+                                $q2->whereBetween('starts_at', [$start, $end])
+                                    ->orWhereBetween('ends_at', [$start, $end])
+                                    ->orWhere(fn($q3) => $q3->where('starts_at', '<', $start)
+                                        ->where('ends_at', '>', $end));
+                            });
+                        });
+                    }
+                }),
+                AllowedFilter::callback('end_time', function ($query, $value) use ($start) {
+                    $end = Carbon::parse($value);
+                    if ($start) {
+                        $query->whereDoesntHave('bookings', function ($q) use ($start, $end) {
+                            $q->where(function ($q2) use ($start, $end) {
+                                $q2->whereBetween('starts_at', [$start, $end])
+                                    ->orWhereBetween('ends_at', [$start, $end])
+                                    ->orWhere(fn($q3) => $q3->where('starts_at', '<', $start)
+                                        ->where('ends_at', '>', $end));
+                            });
+                        });
+                    }
+                }),
+            ])
+            ->defaultSort('id')
+            ->get();
     }
 }

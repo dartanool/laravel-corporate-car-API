@@ -22,10 +22,10 @@ class AvailableCarsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'filter.start_time' => 'required|date',
-            'filter.end_time' => 'required|date|after:filter.start_time',
-            'filter.model_id' => 'nullable|integer|exists:car_models,id',
-            'filter.category_id' => 'nullable|integer|exists:comfort_categories,id',
+            'filter.start_time' => ['required', 'date'],
+            'filter.end_time' => ['required', 'date', 'after:filter.start_time'],
+            'filter.model_id' => ['nullable', 'integer', 'exists:car_models,id'],
+            'filter.category_id' => ['nullable', 'integer', 'exists:comfort_categories,id'],
         ];
     }
 
