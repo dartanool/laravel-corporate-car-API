@@ -73,9 +73,9 @@ POST /api/register
    
     Content-Type: application/json
     {
-    "name": "Имя",
-    "email": "user@example.com",
-    "password": "password123"
+        "name": "Имя",
+        "email": "user@example.com",
+        "password": "password123"
     }
 
 ## Логин
@@ -84,8 +84,8 @@ POST /api/login
 
     Content-Type: application/json
     {
-    "email": "user@example.com",
-    "password": "password123"
+        "email": "user@example.com",
+        "password": "password123"
     }
 
 ## Получение данных
@@ -104,12 +104,12 @@ POST /api/login
 ## Пример запросов
 
     curl -G "http://127.0.0.1:8000/api/available-cars" \
-    -H "Accept: application/json" \
-    -H "Authorization: Bearer 1|exampletoken123" \
-    --data-urlencode "filter[car_model_id]=1" \
-    --data-urlencode "filter[carModel.comfort_category_id]=1" \
-    --data-urlencode "filter[start_time]=2025-11-09 10:00:00" \
-    --data-urlencode "filter[end_time]=2025-11-09 14:00:00"
+        -H "Accept: application/json" \
+        -H "Authorization: Bearer 1|exampletoken123" \
+        --data-urlencode "filter[car_model_id]=1" \
+        --data-urlencode "filter[carModel.comfort_category_id]=1" \
+        --data-urlencode "filter[start_time]=2025-11-09 10:00:00" \
+        --data-urlencode "filter[end_time]=2025-11-09 14:00:00"
 
 ---
 
